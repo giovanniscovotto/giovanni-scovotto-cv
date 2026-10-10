@@ -480,12 +480,18 @@
 \newcommand{\acvHeaderAfterAddressSkip}{-.5mm}
 \newcommand{\acvHeaderIconSep}{\space}
 \newcommand{\acvHeaderSocialSep}{\BeginAccSupp{ActualText={}}\quad\textbar\quad\EndAccSupp{}}
-\newcommand{\acvHeaderAfterSocialSkip}{6mm}
+\newcommand{\acvHeaderAfterSocialSkip}{3mm}
 \newcommand{\acvHeaderAfterQuoteSkip}{5mm}
 
-% Others
-\newcommand{\acvSectionTopSkip}{2.5mm}
-\newcommand{\acvSectionContentTopSkip}{1.1mm}
+% Vertical spacing: every gap in the CV is set here, sections use none of their own
+\newcommand{\acvSectionTopSkip}{3mm}        % above each section title
+\newcommand{\acvSectionContentTopSkip}{1.5mm} % between a section rule and its content
+\newcommand{\acvEntrySkip}{1mm}             % between consecutive entries
+\setlength{\parskip}{0pt}
+% No hyphenation: justified bullets stretch instead of splitting words
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\emergencystretch=2em
 
 
 %-------------------------------------------------------------------------------
@@ -716,10 +722,9 @@
 % Define a section for CV
 % Usage: \cvsection{<section-title>}
 \newcommand{\cvsection}[1]{%
-  \vspace{\acvSectionTopSkip}
-  \sectionstyle{#1}
-  \phantomsection
-  \color{sectiondivider}\vhrulefill{0.9pt}
+  \par\addvspace{\acvSectionTopSkip}%
+  {\sectionstyle{#1}{\sectionstyleface{\strut}}\phantomsection\color{sectiondivider}\vhrulefill{0.9pt}\par}%
+  \nointerlineskip\addvspace{\acvSectionContentTopSkip}%
 }
 
 % Define a subsection for CV
@@ -733,28 +738,25 @@
 
 % Define a paragraph for CV
 \newenvironment{cvparagraph}{%
-  \vspace{\acvSectionContentTopSkip}
-  \vspace{-3mm}
-  \paragraphstyle
+  \paragraphstyle\strut\ignorespaces
 }{%
-  \par
-  \vspace{2mm}
+  % end with the same depth as an entry's last table row, so the gap to the next section matches
+  \unskip\rule[-.3\normalbaselineskip]{0pt}{0pt}\par
 }
 
 % Define an environment for cventry
 \newenvironment{cventries}{%
-  \vspace{\acvSectionContentTopSkip}
-  \begin{center}
+  \par
 }{%
-  \end{center}
+  \par
 }
 % Define an entry of cv information
 % Usage: \cventry{<position>}{<title>}{<location>}{<date>}{<description>}
 \newcommand*{\cventry}[5]{%
-  \vspace{-1.0mm}
-  \setlength\tabcolsep{0pt}
-  \setlength{\extrarowheight}{0pt}
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+  \par\addvspace{\acvEntrySkip}%
+  \setlength\tabcolsep{0pt}%
+  \setlength{\extrarowheight}{0pt}%
+  \noindent\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
     \ifempty{#2#3}
       {\entrypositionstyle{#1} & \entrydatestyle{#4} \\}
       {\entrytitlestyle{#2} & \entrylocationstyle{#3} \\
@@ -809,11 +811,12 @@
 
 % Define an environment for cvskill
 \newenvironment{cvskills}{%
-  \vspace{\acvSectionContentTopSkip}
-  \vspace{-2.0mm}
-    \setlength\tabcolsep{1ex}
-    \setlength{\extrarowheight}{0pt}
-    \tabularx{\textwidth}{l>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X}
+  \par
+    % rows spaced like body text lines rather than the taller default table rows
+    \renewcommand{\arraystretch}{0.85}%
+    \setlength\tabcolsep{1ex}%
+    \setlength{\extrarowheight}{0pt}%
+    \noindent\tabularx{\textwidth}{@{}l>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X@{}}
 }{%
 \endtabularx\par
 }
@@ -834,7 +837,6 @@
 }{%
   \end{itemize}
   \end{justify}
-  \vspace{1.0mm}
 }
 
 
