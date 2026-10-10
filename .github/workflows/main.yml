@@ -111,7 +111,7 @@ jobs:
         creds_info = json.loads(os.environ['GDRIVE_CREDENTIALS_DATA'])
         creds = service_account.Credentials.from_service_account_info(
             creds_info,
-            scopes=['https://www.googleapis.com/auth/drive'],
+            scopes=['https://www.googleapis.com/auth/drive.file'],
             subject=os.environ['GDRIVE_USER_EMAIL']
         )
         service = build('drive', 'v3', credentials=creds)
