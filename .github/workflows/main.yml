@@ -111,7 +111,7 @@ jobs:
         creds_info = json.loads(os.environ['GDRIVE_CREDENTIALS_DATA'])
         creds = service_account.Credentials.from_service_account_info(
             creds_info,
-            scopes=['https://www.googleapis.com/auth/drive'],
+            scopes=['https://www.googleapis.com/auth/drive.file'],
             subject=os.environ['GDRIVE_USER_EMAIL']
         )
         service = build('drive', 'v3', credentials=creds)
@@ -136,7 +136,7 @@ jobs:
         python upload.py
 
     - name: Invia email di conferma
-      uses: dawidd6/action-send-mail@v18
+      uses: dawidd6/action-send-mail@v22
       with:
         server_address: smtp.gmail.com
         server_port: 465
